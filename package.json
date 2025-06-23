@@ -37,6 +37,7 @@
     "eslint-plugin-vue": "~10.0.0",
     "jiti": "^2.4.2",
     "jsdom": "^26.0.0",
+    "miragejs": "^0.1.48",
     "npm-run-all2": "^7.0.2",
     "prettier": "3.5.3",
     "typescript": "~5.8.0",

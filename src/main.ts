@@ -1,5 +1,7 @@
 import './assets/main.css'
 import './utils/yupLocale.ts'
+import { makeServer } from './utils/mirage.ts'
+makeServer()
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

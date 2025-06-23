@@ -86,6 +86,10 @@ const users = [
 //   .then((data) => {
 //     console.log(data)
 //   })
+
+axios.get('http://localhost:5173/api/users').then((data) => {
+  console.log(data)
+})
 </script>
 
 <style scoped></style>
