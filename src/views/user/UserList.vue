@@ -14,17 +14,21 @@
       <BaseTable :columns="['id', 'nome', 'e-mail', 'ações']" :is-loading="isLoading">
         <tr v-for="user in users" :key="user.id" class="border-t last:border-b">
           <td class="px-4 py-3">{{ user.id }}</td>
-          <td class="px-4 py-3 hidden md:table-cell">{{ user.first_name }} {{ user.last_name }}</td>
+          <td class="px-4 py-3 hidden md:table-cell">{{ user.firstName }} {{ user.lastName }}</td>
           <td class="px-4 py-3 hidden sm:table-cell">{{ user.email }}</td>
           <td class="px-4 py-3 flex gap-1">
             <BaseButton icon="eye" />
-            <BaseButton icon="pencil" />
+            <BaseButton icon="pencil" @click="goToEditPage(user.id)" />
             <BaseButton icon="trash" colorClass="bg-red-700 hover:bg-red-800 focus:ring-red-300" />
           </td>
         </tr>
       </BaseTable>
     </div>
-    <ListPaginatation class="mt-4" :pages="5" />
+    <ListPaginatation
+      class="mt-4"
+      :pages="pagination.totalPages"
+      @pageChange="loadData({ page: $event })"
+    />
   </div>
 </template>
 
@@ -33,8 +37,14 @@ import BaseButton from '@/components/BaseButton.vue'
 import BaseTable from '@/components/BaseTable.vue'
 import ListPaginatation from '@/components/ListPaginatation.vue'
 import axios from 'axios'
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+
+interface GetRequestParmas {
+  page: number
+  perPage?: number
+  search?: string
+}
 
 const router = useRouter()
 
@@ -42,54 +52,28 @@ const goToCreatePage = () => {
   router.push('/users/save')
 }
 
+const goToEditPage = (id: number) => {
+  router.push(`/users/save/${id}`)
+}
+
 const isLoading = ref(false)
-const users = [
-  {
-    id: 2,
-    email: 'janet.weaver@reqres.in',
-    first_name: 'Janet',
-    last_name: 'Weaver',
-    avatar: 'https://reqres.in/img/faces/2-image.jpg',
-  },
-  {
-    id: 3,
-    email: 'emma.wong@reqres.in',
-    first_name: 'Emma',
-    last_name: 'Wong',
-    avatar: 'https://reqres.in/img/faces/3-image.jpg',
-  },
-  {
-    id: 4,
-    email: 'eve.holt@reqres.in',
-    first_name: 'Eve',
-    last_name: 'Holt',
-    avatar: 'https://reqres.in/img/faces/4-image.jpg',
-  },
-  {
-    id: 5,
-    email: 'charles.morris@reqres.in',
-    first_name: 'Charles',
-    last_name: 'Morris',
-    avatar: 'https://reqres.in/img/faces/5-image.jpg',
-  },
-  {
-    id: 6,
-    email: 'tracey.ramos@reqres.in',
-    first_name: 'Tracey',
-    last_name: 'Ramos',
-    avatar: 'https://reqres.in/img/faces/6-image.jpg',
-  },
-]
+const users = ref([])
+const pagination = reactive({ page: 1, totalPages: 1 })
 
-// axios
-//   .get('https://reqres.in/api/users', { headers: { 'x-api-key': 'reqres-free-v1' } })
-//   .then((data) => {
-//     console.log(data)
-//   })
-
-axios.get('http://localhost:5173/api/users').then((data) => {
-  console.log(data)
-})
+const loadData = ({ page, perPage = 10, search = '' }: GetRequestParmas) => {
+  isLoading.value = true
+  axios
+    .get('http://localhost:5173/api/users', { params: { page, perPage, search } })
+    .then(({ data }) => {
+      console.log(data)
+      users.value = data.result
+      pagination.totalPages = data.meta.totalPages
+    })
+    .finally(() => {
+      isLoading.value = false
+    })
+}
+loadData({ page: 1 })
 </script>
 
 <style scoped></style>

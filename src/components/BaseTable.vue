@@ -8,12 +8,7 @@
     <tbody>
       <tr v-if="isLoading">
         <td colspan="4" class="py-6 text-center">
-          <div class="flex justify-center items-center space-x-2">
-            <div
-              class="w-5 h-5 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"
-            ></div>
-            <span class="text-gray-600">Carregando dados...</span>
-          </div>
+          <BaseLoader />
         </td>
       </tr>
       <template v-else>
@@ -24,6 +19,8 @@
 </template>
 
 <script setup lang="ts">
+import BaseLoader from './BaseLoader.vue'
+
 defineProps<{
   isLoading: boolean
   columns: string[]

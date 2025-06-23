@@ -69,7 +69,7 @@ export function makeServer() {
         const paginatedUsers = users.slice(start, end)
 
         return {
-          users: paginatedUsers,
+          result: paginatedUsers,
           meta: {
             total,
             page,
@@ -86,7 +86,8 @@ export function makeServer() {
 
       this.get('/users/:id', (schema, request) => {
         const id = request.params.id
-        return schema.find('user', id)
+        const user = schema.find('user', id)
+        return { result: user }
       })
 
       this.put('/users/:id', (schema, request) => {

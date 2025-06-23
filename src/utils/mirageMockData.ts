@@ -25,15 +25,15 @@ const lastnames = [
 ]
 
 const jobs = [
-  'Professor',
-  'Engenheiro',
-  'Médico',
-  'Advogado',
-  'Designer',
-  'Programador',
-  'Enfermeiro',
-  'Arquiteto',
-  'Farmacêutico',
+  'Professor(a)',
+  'Engenheiro(a)',
+  'Médico(a)',
+  'Advogado(a)',
+  'Designer(a)',
+  'Programador(a)',
+  'Enfermeiro(a)',
+  'Arquiteto(a)',
+  'Farmacêutico(a)',
   'Jornalista',
 ]
 

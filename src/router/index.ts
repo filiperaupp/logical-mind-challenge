@@ -15,6 +15,7 @@ const router = createRouter({
       children: [
         { path: 'list', component: UserList },
         { path: 'save', component: UserSave },
+        { path: 'save/:id', component: UserSave },
       ],
     },
   ],
