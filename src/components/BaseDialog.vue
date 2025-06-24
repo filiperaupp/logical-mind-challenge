@@ -11,6 +11,7 @@
         class="absolute top-3 right-3"
         icon="times"
         color-class="bg-gray-500"
+        @click="close"
       />
       <slot></slot>
     </div>

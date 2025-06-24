@@ -16,7 +16,7 @@ withDefaults(
     color?: string
     colorClass?: string
   }>(),
-  { color: 'cyan', colorClass: 'bg-cyan-700 hover:bg-cyan-800 focus:ring-cyan-300' },
+  { color: 'cyan', colorClass: 'bg-gray-400 hover:bg-gray-500 focus:ring-gray-300' },
 )
 </script>
 

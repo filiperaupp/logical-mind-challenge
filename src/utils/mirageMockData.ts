@@ -29,7 +29,7 @@ const jobs = [
   'Engenheiro(a)',
   'Médico(a)',
   'Advogado(a)',
-  'Designer(a)',
+  'Designer',
   'Programador(a)',
   'Enfermeiro(a)',
   'Arquiteto(a)',

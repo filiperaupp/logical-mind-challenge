@@ -1,6 +1,7 @@
 <template>
   <div>
     <UserDeleteDialog v-model="showDeleteDialog" :user="selectedUser" @delete="reloadList" />
+    <UserDetailDialog v-model="showDetailDialog" :user="selectedUser" />
     <div class="flex flex-row">
       <h1 class="text-3xl">Usuários</h1>
       <BaseButton
@@ -12,13 +13,12 @@
       />
     </div>
     <div class="overflow-x-auto mt-4">
-      <BaseTable :columns="['id', 'nome', 'e-mail', 'ações']" :is-loading="isLoading">
+      <BaseTable :columns="['nome', 'e-mail', 'ações']" :is-loading="isLoading">
         <tr v-for="user in users" :key="user.id" class="border-t last:border-b">
-          <td class="px-4 py-3">{{ user.id }}</td>
           <td class="px-4 py-3 hidden md:table-cell">{{ user.firstName }} {{ user.lastName }}</td>
           <td class="px-4 py-3 hidden sm:table-cell">{{ user.email }}</td>
           <td class="px-4 py-3 flex gap-1">
-            <BaseButton icon="eye" />
+            <BaseButton icon="eye" @click="handleDetail(user.id)" />
             <BaseButton icon="pencil" @click="goToEditPage(user.id)" />
             <BaseButton
               icon="trash"
@@ -46,6 +46,7 @@ import axios from 'axios'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import UserDeleteDialog from './UserDeleteDialog.vue'
+import UserDetailDialog from './UserDetailDialog.vue'
 
 interface GetRequestParmas {
   page: number
@@ -73,6 +74,11 @@ const handleDelete = (id: number) => {
   showDeleteDialog.value = true
 }
 
+const handleDetail = (id: number) => {
+  selectedUser.value = users.value.find((user) => user.id === id)
+  showDetailDialog.value = true
+}
+
 const loadData = ({ page, perPage = 10, search = '' }: GetRequestParmas) => {
   isLoading.value = true
   axios
@@ -93,6 +99,7 @@ const reloadList = () => {
 }
 
 const showDeleteDialog = ref(false)
+const showDetailDialog = ref(false)
 </script>
 
 <style scoped></style>
