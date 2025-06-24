@@ -1,5 +1,6 @@
 <template>
   <div>
+    <UserDeleteDialog v-model="showDeleteDialog" :user="selectedUser" @delete="reloadList" />
     <div class="flex flex-row">
       <h1 class="text-3xl">Usuários</h1>
       <BaseButton
@@ -19,12 +20,17 @@
           <td class="px-4 py-3 flex gap-1">
             <BaseButton icon="eye" />
             <BaseButton icon="pencil" @click="goToEditPage(user.id)" />
-            <BaseButton icon="trash" colorClass="bg-red-700 hover:bg-red-800 focus:ring-red-300" />
+            <BaseButton
+              icon="trash"
+              colorClass="bg-red-700 hover:bg-red-800 focus:ring-red-300"
+              @click="handleDelete(user.id)"
+            />
           </td>
         </tr>
       </BaseTable>
     </div>
     <ListPaginatation
+      v-model="pagination.page"
       class="mt-4"
       :pages="pagination.totalPages"
       @pageChange="loadData({ page: $event })"
@@ -39,6 +45,7 @@ import ListPaginatation from '@/components/ListPaginatation.vue'
 import axios from 'axios'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import UserDeleteDialog from './UserDeleteDialog.vue'
 
 interface GetRequestParmas {
   page: number
@@ -59,6 +66,12 @@ const goToEditPage = (id: number) => {
 const isLoading = ref(false)
 const users = ref([])
 const pagination = reactive({ page: 1, totalPages: 1 })
+const selectedUser = ref()
+
+const handleDelete = (id: number) => {
+  selectedUser.value = users.value.find((user) => user.id === id)
+  showDeleteDialog.value = true
+}
 
 const loadData = ({ page, perPage = 10, search = '' }: GetRequestParmas) => {
   isLoading.value = true
@@ -74,6 +87,12 @@ const loadData = ({ page, perPage = 10, search = '' }: GetRequestParmas) => {
     })
 }
 loadData({ page: 1 })
+
+const reloadList = () => {
+  loadData({ page: pagination.page })
+}
+
+const showDeleteDialog = ref(false)
 </script>
 
 <style scoped></style>

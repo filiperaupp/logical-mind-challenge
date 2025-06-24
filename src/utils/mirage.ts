@@ -99,7 +99,14 @@ export function makeServer() {
 
       this.delete('/users/:id', (schema, request) => {
         const id = request.params.id
-        return schema.find('user', id)?.destroy() || new Response(500)
+        const user = schema.find('user', id)
+        if (user) {
+          console.log('if')
+          user.destroy()
+          return new Response(204)
+        } else {
+          return new Response(500)
+        }
       })
     },
   })
