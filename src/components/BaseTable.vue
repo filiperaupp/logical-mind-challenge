@@ -7,7 +7,7 @@
     </thead>
     <tbody>
       <tr v-if="isLoading">
-        <td colspan="4" class="py-6 text-center">
+        <td :colspan="columns.length" class="py-6 text-center">
           <BaseLoader />
         </td>
       </tr>

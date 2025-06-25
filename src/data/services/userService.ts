@@ -10,6 +10,7 @@ interface UserListPaginateParams {
   page: number
   perPage?: number
   search?: string
+  orderBy?: string
 }
 
 const service = (): BaseService<User, UserForm, UserListPaginateParams> => {
@@ -17,9 +18,10 @@ const service = (): BaseService<User, UserForm, UserListPaginateParams> => {
     page,
     perPage = 10,
     search = '',
+    orderBy,
   }: UserListPaginateParams): Promise<ListResponseType<User[]>> => {
     const response = await axios.get<ListResponseType<User[]>>(API_BASE, {
-      params: { page, perPage, search },
+      params: { page, perPage, search, orderBy },
     })
     response.data.result = response.data.result.map(mapToUser)
     return response.data

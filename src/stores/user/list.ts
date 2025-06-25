@@ -9,6 +9,7 @@ export const useUserStore = defineStore('users', () => {
   const users = ref<User[]>([])
   const pagination = reactive({ page: 1, totalPages: 1 })
   const selectedUser = ref()
+  const appliedFilter = ref<Record<string, any>>({})
 
   const routeRedirect = useRouteRedirect('users')
 
@@ -16,10 +17,11 @@ export const useUserStore = defineStore('users', () => {
     selectedUser.value = users.value.find((user) => user.id === id)
   }
 
-  const loadListData = (page = 1, search = '') => {
+  const loadListData = (page = 1, params?: Record<string, any>) => {
     isLoading.value = true
+    appliedFilter.value = params || {}
     userService
-      .getAllPaginate({ page, search })
+      .getAllPaginate({ page, ...params })
       .then((response) => {
         users.value = response.result
         pagination.totalPages = response.meta.totalPages
@@ -29,8 +31,18 @@ export const useUserStore = defineStore('users', () => {
       })
   }
 
+  const paginateList = (page: number) => {
+    console.log(appliedFilter.value)
+    loadListData(page, appliedFilter.value)
+  }
+
+  const filterList = (search: string, orderBy: string) => {
+    pagination.page = 1
+    loadListData(1, { search, orderBy })
+  }
+
   const reloadList = () => {
-    loadListData(pagination.page)
+    loadListData(pagination.page, appliedFilter.value)
   }
 
   return {
@@ -41,6 +53,8 @@ export const useUserStore = defineStore('users', () => {
     service: userService,
     upadteSelectedUser,
     loadListData,
+    paginateList,
+    filterList,
     reloadList,
     ...routeRedirect,
   }

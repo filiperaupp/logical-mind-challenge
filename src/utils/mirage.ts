@@ -52,6 +52,7 @@ export function makeServer() {
         const page = Number(request.queryParams.page || 1)
         const perPage = Number(request.queryParams.perPage || 10)
         const search = (request.queryParams.search as string)?.toLowerCase() || ''
+        const orderBy = (request.queryParams.orderBy as string)?.toLowerCase() || ''
 
         let users = schema.all('user').models
 
@@ -61,6 +62,23 @@ export function makeServer() {
               (user.firstName as string).toLowerCase().includes(search) ||
               (user.lastName as string).toLowerCase().includes(search),
           )
+        }
+
+        if (orderBy) {
+          switch (orderBy) {
+            case 'id':
+              users = users.sort((a, b) => Number(a.id) - Number(b.id))
+              break
+            case 'name':
+              users = users.sort((a, b) => {
+                const nameA = `${a.firstName} ${a.lastName}`.toLowerCase()
+                const nameB = `${b.firstName} ${b.lastName}`.toLowerCase()
+                return nameA.localeCompare(nameB)
+              })
+              break
+            default:
+              break
+          }
         }
 
         const total = users.length
