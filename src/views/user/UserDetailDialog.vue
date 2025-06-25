@@ -1,6 +1,7 @@
 <template>
   <BaseDialog v-bind="props" title="Detalhes de usuário" close-button @update:model-value="close">
-    <div class="space-y-2">
+    <p v-if="!user">Nenhum usuário selecionado</p>
+    <div v-else class="space-y-2">
       <div class="flex gap-2">
         <span class="font-medium">ID:</span>
         <span>{{ user.id }}</span>
@@ -27,32 +28,17 @@
 
 <script setup lang="ts">
 import BaseDialog from '@/components/BaseDialog.vue'
-import axios from 'axios'
-import { ref } from 'vue'
+import type { User } from '@/data/types/User'
 
 const props = defineProps<{
   modelValue: boolean
-  user: any
+  user?: User
 }>()
 
-const emit = defineEmits(['update:modelValue', 'delete'])
+const emit = defineEmits(['update:modelValue'])
 
 const close = () => {
   emit('update:modelValue', false)
-}
-
-const isLoading = ref(false)
-const deleteUser = () => {
-  isLoading.value = true
-  axios
-    .delete(`http://localhost:5173/api/users/${props.user.id}`)
-    .then(() => {
-      emit('delete')
-      close()
-    })
-    .finally(() => {
-      isLoading.value = false
-    })
 }
 </script>
 

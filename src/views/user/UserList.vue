@@ -1,6 +1,6 @@
 <template>
   <div>
-    <UserDeleteDialog v-model="showDeleteDialog" :user="selectedUser" @delete="reloadList" />
+    <UserDeleteDialog v-model="showDeleteDialog" :user="selectedUser" @delete="store.reloadList" />
     <UserDetailDialog v-model="showDetailDialog" :user="selectedUser" />
     <div class="flex flex-row">
       <h1 class="text-3xl">Usuários</h1>
@@ -9,7 +9,7 @@
         text="Adicionar"
         icon="plus"
         colorClass="bg-green-700 hover:bg-green-800 focus:ring-green-300"
-        @click="goToCreatePage"
+        @click="store.goToSaveScreen()"
       />
     </div>
     <div class="overflow-x-auto mt-4">
@@ -19,7 +19,7 @@
           <td class="px-4 py-3 hidden sm:table-cell">{{ user.email }}</td>
           <td class="px-4 py-3 flex gap-1">
             <BaseButton icon="eye" @click="handleDetail(user.id)" />
-            <BaseButton icon="pencil" @click="goToEditPage(user.id)" />
+            <BaseButton icon="pencil" @click="store.goToSaveScreen(user.id)" />
             <BaseButton
               icon="trash"
               colorClass="bg-red-700 hover:bg-red-800 focus:ring-red-300"
@@ -33,73 +33,40 @@
       v-model="pagination.page"
       class="mt-4"
       :pages="pagination.totalPages"
-      @pageChange="loadData({ page: $event })"
+      @pageChange="store.loadListData($event)"
     />
   </div>
 </template>
 
 <script setup lang="ts">
+import { onBeforeMount, ref } from 'vue'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseTable from '@/components/BaseTable.vue'
 import ListPaginatation from '@/components/ListPaginatation.vue'
-import axios from 'axios'
-import { reactive, ref } from 'vue'
-import { useRouter } from 'vue-router'
 import UserDeleteDialog from './UserDeleteDialog.vue'
 import UserDetailDialog from './UserDetailDialog.vue'
 
-interface GetRequestParmas {
-  page: number
-  perPage?: number
-  search?: string
-}
+import { useUserStore } from '@/stores/user/list'
+import { storeToRefs } from 'pinia'
 
-const router = useRouter()
+const store = useUserStore()
+const { isLoading, users, pagination, selectedUser } = storeToRefs(store)
 
-const goToCreatePage = () => {
-  router.push('/users/save')
-}
-
-const goToEditPage = (id: number) => {
-  router.push(`/users/save/${id}`)
-}
-
-const isLoading = ref(false)
-const users = ref([])
-const pagination = reactive({ page: 1, totalPages: 1 })
-const selectedUser = ref()
-
+const showDeleteDialog = ref(false)
 const handleDelete = (id: number) => {
-  selectedUser.value = users.value.find((user) => user.id === id)
+  store.upadteSelectedUser(id)
   showDeleteDialog.value = true
 }
 
+const showDetailDialog = ref(false)
 const handleDetail = (id: number) => {
-  selectedUser.value = users.value.find((user) => user.id === id)
+  store.upadteSelectedUser(id)
   showDetailDialog.value = true
 }
 
-const loadData = ({ page, perPage = 10, search = '' }: GetRequestParmas) => {
-  isLoading.value = true
-  axios
-    .get('http://localhost:5173/api/users', { params: { page, perPage, search } })
-    .then(({ data }) => {
-      console.log(data)
-      users.value = data.result
-      pagination.totalPages = data.meta.totalPages
-    })
-    .finally(() => {
-      isLoading.value = false
-    })
-}
-loadData({ page: 1 })
-
-const reloadList = () => {
-  loadData({ page: pagination.page })
-}
-
-const showDeleteDialog = ref(false)
-const showDetailDialog = ref(false)
+onBeforeMount(() => {
+  store.loadListData()
+})
 </script>
 
 <style scoped></style>

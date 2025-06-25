@@ -14,23 +14,31 @@
         colorClass="bg-gray-600"
         @click="close"
       />
-      <BaseButton text="Excluir" icon="trash" colorClass="bg-red-700" @click="deleteUser" />
+      <BaseButton
+        text="Excluir"
+        icon="trash"
+        colorClass="bg-red-700"
+        @click="deleteUser"
+        :is-loading="isLoading"
+      />
     </div>
   </BaseDialog>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useUserStore } from '@/stores/user/list'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseDialog from '@/components/BaseDialog.vue'
-import axios from 'axios'
-import { ref } from 'vue'
-
-const props = defineProps<{
-  modelValue: boolean
-  user: any
-}>()
+import type { User } from '@/data/types/User'
 
 const emit = defineEmits(['update:modelValue', 'delete'])
+const props = defineProps<{
+  modelValue: boolean
+  user?: User
+}>()
+
+const store = useUserStore()
 
 const close = () => {
   emit('update:modelValue', false)
@@ -38,9 +46,10 @@ const close = () => {
 
 const isLoading = ref(false)
 const deleteUser = () => {
+  if (!props.user) return
   isLoading.value = true
-  axios
-    .delete(`http://localhost:5173/api/users/${props.user.id}`)
+  store.service
+    .remove(props.user.id)
     .then(() => {
       emit('delete')
       close()

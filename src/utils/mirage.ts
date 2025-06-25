@@ -81,7 +81,8 @@ export function makeServer() {
 
       this.post('/users', (schema, request) => {
         const attrs = JSON.parse(request.requestBody)
-        return schema.create('user', attrs)
+        const user = schema.create('user', attrs)
+        return { result: user }
       })
 
       this.get('/users/:id', (schema, request) => {
@@ -94,14 +95,19 @@ export function makeServer() {
         const id = request.params.id
         const attrs = JSON.parse(request.requestBody)
         const user = schema.find('user', id)
-        return user?.update(attrs) || new Response(500)
+
+        if (user) {
+          const updatedUser = user.update(attrs)
+          return { result: updatedUser }
+        } else {
+          return new Response(500)
+        }
       })
 
       this.delete('/users/:id', (schema, request) => {
         const id = request.params.id
         const user = schema.find('user', id)
         if (user) {
-          console.log('if')
           user.destroy()
           return new Response(204)
         } else {

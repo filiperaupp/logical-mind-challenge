@@ -3,10 +3,18 @@
   <BaseLoader v-if="isLoadingData" class="my-4" />
   <template v-else>
     <div class="grid w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
-      <InputText label="Nome" v-model="firstName" :error-message="errors.firstName" />
-      <InputText label="Sobrenome" v-model="lastName" :error-message="errors.lastName" />
-      <InputText label="E-mail" v-model="email" :error-message="errors.email" />
-      <InputText label="Profissão" v-model="job" :error-message="errors.job" />
+      <InputText
+        label="Nome"
+        v-model="firstName"
+        :error-message="formContext.errors.value.firstName"
+      />
+      <InputText
+        label="Sobrenome"
+        v-model="lastName"
+        :error-message="formContext.errors.value.lastName"
+      />
+      <InputText label="E-mail" v-model="email" :error-message="formContext.errors.value.email" />
+      <InputText label="Profissão" v-model="job" :error-message="formContext.errors.value.job" />
     </div>
     <div class="flex justify-end mt-4">
       <BaseButton
@@ -16,74 +24,43 @@
         colorClass="bg-gray-600"
         @click="goToList()"
       />
-      <BaseButton text="Salvar" icon="save" @click="onSubmit" />
+      <BaseButton
+        text="Salvar"
+        icon="save"
+        @click="onSubmit"
+        :is-loading="isLoadingAction"
+        color-class="bg-green-700"
+      />
     </div>
   </template>
 </template>
 
 <script setup lang="ts">
 import { useForm } from 'vee-validate'
-import * as yup from 'yup'
+import type { User, UserForm } from '@/data/types/User'
+import { useUsersSaveStore } from '@/stores/user/save'
 import BaseButton from '@/components/BaseButton.vue'
 import InputText from '@/components/forms/InputText.vue'
-import axios from 'axios'
-import { useRoute, useRouter } from 'vue-router'
 import BaseLoader from '@/components/BaseLoader.vue'
-import { ref } from 'vue'
+import { useFormManager } from '@/compositions/useFormManager'
 
-const router = useRouter()
-const route = useRoute()
+const store = useUsersSaveStore()
 
-const schema = yup.object({
-  firstName: yup.string().required().label('Nome'),
-  lastName: yup.string().required().label('Sobrenome'),
-  email: yup.string().required().email().label('E-mail'),
-  job: yup.string().required().label('Profissão'),
+const formContext = useForm<UserForm>({
+  validationSchema: store.formSchema,
 })
+const [firstName] = formContext.defineField('firstName')
+const [lastName] = formContext.defineField('lastName')
+const [email] = formContext.defineField('email')
+const [job] = formContext.defineField('job')
 
-const { defineField, handleSubmit, errors, setValues } = useForm({
-  validationSchema: schema,
-})
-const [firstName] = defineField('firstName')
-const [lastName] = defineField('lastName')
-const [email] = defineField('email')
-const [job] = defineField('job')
-
-const isLoadingData = ref(false)
-const isLoadingAction = ref(false)
-
-const id = route.params.id
-if (id) {
-  isLoadingData.value = true
-  axios
-    .get(`http://localhost:5173/api/users/${id}`)
-    .then(({ data }) => {
-      console.log(data)
-      setValues(data.result)
-    })
-    .finally(() => {
-      isLoadingData.value = false
-    })
-}
-const title = id ? 'Editar' : 'Criar'
-
-const goToList = () => {
-  router.push('/users/list')
-}
-
-const onSubmit = handleSubmit((values) => {
-  console.log('submit', values)
-  isLoadingAction.value = true
-  const saveRequest = id
-    ? axios.put(`http://localhost:5173/api/users/${id}`, values)
-    : axios.post('http://localhost:5173/api/users', values)
-  saveRequest
-    .then(() => {
-      router.push('/users/list')
-    })
-    .finally(() => {
-      isLoadingAction.value = false
-    })
+const { onSubmit, isLoadingAction, isLoadingData, goToList, title } = useFormManager<
+  UserForm,
+  User
+>({
+  formContext,
+  service: store.service,
+  mapEntityToForm: store.mapEntityToForm,
 })
 </script>
 
