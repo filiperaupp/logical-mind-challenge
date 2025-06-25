@@ -106,7 +106,8 @@ export function makeServer() {
       this.get('/users/:id', (schema, request) => {
         const id = request.params.id
         const user = schema.find('user', id)
-        return { result: user }
+        if (user) return { result: user }
+        else return new Response(404, undefined, { message: 'Usuário não encontrado' })
       })
 
       this.put('/users/:id', (schema, request) => {
@@ -118,19 +119,22 @@ export function makeServer() {
           const updatedUser = user.update(attrs)
           return { result: updatedUser }
         } else {
-          return new Response(500)
+          return new Response(404, undefined, { message: 'Usuário não encontrado' })
         }
       })
 
       this.delete('/users/:id', (schema, request) => {
         const id = request.params.id
         const user = schema.find('user', id)
-        if (user) {
-          user.destroy()
-          return new Response(204)
-        } else {
-          return new Response(500)
-        }
+
+        if (!user) return new Response(404, undefined, { message: 'Usuário não encontrado' })
+        if (Number(user.id) === 1)
+          return new Response(400, undefined, {
+            message: 'O usuário com ID 1 não pode ser excluído',
+          })
+
+        user.destroy()
+        return new Response(204)
       })
     },
   })

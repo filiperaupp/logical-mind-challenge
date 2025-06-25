@@ -24,10 +24,18 @@ export function useFormManager<TForm extends Record<string, any>, TEntity>(opts:
     if (!service.getById || !id) return
 
     isLoadingData.value = true
-    const { result } = await service.getById(id)
-    const formData = mapEntityToForm(result)
-    formContext.setValues(formData as any)
-    isLoadingData.value = false
+    service
+      .getById(id)
+      .then(({ result }) => {
+        const formData = mapEntityToForm(result)
+        formContext.setValues(formData as any)
+      })
+      .catch(() => {
+        goToList()
+      })
+      .finally(() => {
+        isLoadingData.value = false
+      })
   }
 
   const onSubmit = formContext.handleSubmit(async (values) => {

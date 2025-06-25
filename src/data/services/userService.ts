@@ -1,10 +1,10 @@
-import axios from 'axios'
 import { mapToUser } from '../mappers/userMapper'
 import type { User, UserForm } from '../types/User'
 import type { ListResponseType, ItemResponseType } from '@/utils/response'
 import type { BaseService } from './BaseService'
+import { api } from '@/utils/axiosConfig'
 
-const API_BASE = 'http://localhost:5173/api/users'
+const RESOURCE_PATH = '/users'
 
 interface UserListPaginateParams {
   page: number
@@ -20,7 +20,7 @@ const service = (): BaseService<User, UserForm, UserListPaginateParams> => {
     search = '',
     orderBy,
   }: UserListPaginateParams): Promise<ListResponseType<User[]>> => {
-    const response = await axios.get<ListResponseType<User[]>>(API_BASE, {
+    const response = await api.get<ListResponseType<User[]>>(RESOURCE_PATH, {
       params: { page, perPage, search, orderBy },
     })
     response.data.result = response.data.result.map(mapToUser)
@@ -28,24 +28,24 @@ const service = (): BaseService<User, UserForm, UserListPaginateParams> => {
   }
 
   const getById = async (id: number): Promise<ItemResponseType<User>> => {
-    const response = await axios.get<ItemResponseType<User>>(`${API_BASE}/${id}`)
+    const response = await api.get<ItemResponseType<User>>(`${RESOURCE_PATH}/${id}`)
     response.data.result = mapToUser(response.data.result)
     return response.data
   }
 
   const create = async (user: UserForm): Promise<User> => {
-    const response = await axios.post(API_BASE, user)
+    const response = await api.post(RESOURCE_PATH, user)
 
     return mapToUser(response.data.result)
   }
 
   const update = async (id: number, user: UserForm): Promise<User> => {
-    const response = await axios.put(`${API_BASE}/${id}`, user)
+    const response = await api.put(`${RESOURCE_PATH}/${id}`, user)
     return mapToUser(response.data.result)
   }
 
   const remove = async (id: number): Promise<void> => {
-    return axios.delete(`${API_BASE}/${id}`)
+    return api.delete(`${RESOURCE_PATH}/${id}`)
   }
 
   return {
