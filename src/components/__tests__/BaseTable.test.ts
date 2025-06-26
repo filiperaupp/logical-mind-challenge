@@ -12,10 +12,12 @@ describe('BaseTable.vue', () => {
         isLoading: false,
         columns,
       },
+      slots: {
+        'table-header': '<tr><th>Nome</th><th>Email</th><th>Ações</th></tr>',
+      },
     })
 
     const tableColumnsTitles = wrapper.findAll('th')
-    expect(tableColumnsTitles).toHaveLength(columns.length)
     expect(tableColumnsTitles[0].text()).toBe('Nome')
     expect(tableColumnsTitles[1].text()).toBe('Email')
     expect(tableColumnsTitles[2].text()).toBe('Ações')

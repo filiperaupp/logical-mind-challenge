@@ -1,6 +1,6 @@
 <template>
   <button
-    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded focus:ring-4 focus:outline-none cursor-pointer"
+    class="inline-flex items-center px-2.5 py-2 text-sm font-medium text-center text-white rounded focus:ring-4 focus:outline-none cursor-pointer"
     :class="colorClass"
     :disabled="disabled || isLoading"
   >

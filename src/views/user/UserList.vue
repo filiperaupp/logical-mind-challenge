@@ -22,6 +22,13 @@
     <UserFilter class="mt-4" v-if="showFilter" />
     <div class="overflow-x-auto mt-4">
       <BaseTable :columns="['nome', 'e-mail', 'ações']" :is-loading="isLoading">
+        <template #table-header>
+          <tr>
+            <th class="px-4 py-3">Nome</th>
+            <th class="px-4 py-3 hidden md:table-cell">E-mail</th>
+            <th class="px-4 py-3 text-right w-0 whitespace-nowrap">Ações</th>
+          </tr>
+        </template>
         <template v-if="users.length === 0">
           <tr>
             <td colspan="4" class="px-4 py-3 text-center border-b">Nenhum usuário encontrado</td>
@@ -29,8 +36,8 @@
         </template>
         <template v-else>
           <tr v-for="user in users" :key="user.id" class="border-t last:border-b">
-            <td class="px-4 py-3 hidden md:table-cell">{{ user.firstName }} {{ user.lastName }}</td>
-            <td class="px-4 py-3 hidden sm:table-cell">{{ user.email }}</td>
+            <td class="px-4 py-3">{{ user.firstName }} {{ user.lastName }}</td>
+            <td class="px-4 py-3 hidden md:table-cell">{{ user.email }}</td>
             <td class="px-4 py-3 flex gap-1">
               <BaseButton icon="eye" @click="handleDetail(user.id)" />
               <BaseButton icon="pencil" @click="store.goToSaveScreen(user.id)" />
@@ -67,7 +74,7 @@ import UserFilter from './UserFilter.vue'
 
 const store = useUserStore()
 const { isLoading, users, pagination, selectedUser } = storeToRefs(store)
-const showFilter = ref(true)
+const showFilter = ref(false)
 
 const showDeleteDialog = ref(false)
 const handleDelete = (id: number) => {

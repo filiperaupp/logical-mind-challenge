@@ -1,13 +1,15 @@
 <template>
-  <div class="flex items-center justify-center space-x-2">
-    <button
-      v-for="index in pages"
-      class="px-3 py-1 rounded cursor-pointer"
-      :class="[index === modelValue ? selectedButtonClass : unselectedButtonClass]"
-      @click="updatePage(index)"
-    >
-      {{ index }}
-    </button>
+  <div class="w-full overflow-x-auto pb-3">
+    <div class="flex items-center justify-center space-x-2 px-4 min-w-max">
+      <button
+        v-for="index in pages"
+        class="px-3 py-1 rounded cursor-pointer"
+        :class="[index === modelValue ? selectedButtonClass : unselectedButtonClass]"
+        @click="updatePage(index)"
+      >
+        {{ index }}
+      </button>
+    </div>
   </div>
 </template>
 

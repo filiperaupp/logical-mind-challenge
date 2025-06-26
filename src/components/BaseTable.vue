@@ -1,9 +1,7 @@
 <template>
   <table class="min-w-full text-sm text-left text-gray-700">
     <thead class="bg-gray-100 text-xs uppercase text-gray-600">
-      <tr>
-        <th v-for="(column, index) in columns" :key="index" class="px-4 py-3">{{ column }}</th>
-      </tr>
+      <slot name="table-header"></slot>
     </thead>
     <tbody>
       <tr v-if="isLoading">
