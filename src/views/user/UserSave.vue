@@ -2,7 +2,7 @@
   <h1 class="text-3xl">Usuários - {{ title }}</h1>
   <BaseLoader v-if="isLoadingData" class="my-4" />
   <template v-else>
-    <div class="grid w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4">
+    <div class="grid w-full lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 mt-4">
       <InputText
         label="Nome"
         v-model="firstName"
