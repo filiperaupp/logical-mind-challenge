@@ -8,10 +8,11 @@ export function useFormManager<TForm extends Record<string, any>, TEntity>(opts:
   formContext: FormContext<TForm>
   service: Pick<BaseService<TEntity, TForm>, 'getById' | 'create' | 'update'>
   mapEntityToForm: (entity: TEntity) => TForm
+  resourcePath: string
 }) {
-  const { formContext, service, mapEntityToForm } = opts
+  const { formContext, service, resourcePath, mapEntityToForm } = opts
 
-  const { goToList } = useRouteRedirect('users')
+  const { goToList } = useRouteRedirect(resourcePath)
   const route = useRoute()
   const id = Number(route.params.id)
 

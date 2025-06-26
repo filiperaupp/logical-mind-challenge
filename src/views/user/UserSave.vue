@@ -61,6 +61,7 @@ const { onSubmit, isLoadingAction, isLoadingData, goToList, title } = useFormMan
   formContext,
   service: store.service,
   mapEntityToForm: store.mapEntityToForm,
+  resourcePath: 'users',
 })
 </script>
 
