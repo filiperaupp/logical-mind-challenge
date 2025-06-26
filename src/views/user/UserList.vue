@@ -57,7 +57,7 @@
 import { onBeforeMount, ref } from 'vue'
 import BaseButton from '@/components/BaseButton.vue'
 import BaseTable from '@/components/BaseTable.vue'
-import ListPaginatation from '@/components/ListPaginatation.vue'
+import ListPaginatation from '@/components/ListPagination.vue'
 import UserDeleteDialog from './UserDeleteDialog.vue'
 import UserDetailDialog from './UserDetailDialog.vue'
 

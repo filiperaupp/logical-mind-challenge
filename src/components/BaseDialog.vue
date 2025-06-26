@@ -2,9 +2,13 @@
   <div
     v-if="modelValue"
     class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+    data-test="dialog-background"
     @click.self="close"
   >
-    <div class="p-4 border rounded-lg shadow bg-white space-y-4 relative m-6 min-w-sm">
+    <div
+      class="p-4 border rounded-lg shadow bg-white space-y-4 relative m-6 min-w-sm"
+      data-test="dialog"
+    >
       <h1 class="text-2xl">{{ title }}</h1>
       <BaseButton
         v-if="closeButton"

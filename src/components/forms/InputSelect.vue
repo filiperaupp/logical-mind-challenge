@@ -12,7 +12,9 @@
         {{ option.label }}
       </option>
     </select>
-    <small v-if="errorMessage" class="text-red-600">{{ errorMessage }}</small>
+    <small v-if="errorMessage" class="text-red-600" data-test="input-error-message">
+      {{ errorMessage }}
+    </small>
   </div>
 </template>
 

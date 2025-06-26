@@ -1,14 +1,16 @@
 <template>
   <div>
-    <label for="username" class="block text-sm font-medium text-gray-700">{{ label }}</label>
+    <label :for="label" class="block text-sm font-medium text-gray-700">{{ label }}</label>
     <input
       class="mt-1 block w-full rounded-md border border-gray-500 px-4 py-2"
-      id="username"
+      :id="label"
       type="text"
       :value="modelValue"
       @input="handleInput($event)"
     />
-    <small v-if="errorMessage" class="text-red-600">{{ errorMessage }}</small>
+    <small v-if="errorMessage" class="text-red-600" data-test="input-error-message">
+      {{ errorMessage }}
+    </small>
   </div>
 </template>
 

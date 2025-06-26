@@ -10,9 +10,10 @@
       leave-to-class="opacity-0 translate-y-2"
     >
       <div
-        v-for="toast in store.toasts"
+        v-for="toast in toasts"
         :key="toast.id"
         class="w-80 p-4 rounded-lg shadow-lg border bg-red-100 border-red-300 text-red-800"
+        data-test="toast"
       >
         <strong class="block font-semibold">Erro</strong>
         <p class="text-sm">{{ toast.message }}</p>
@@ -22,7 +23,9 @@
 </template>
 
 <script setup lang="ts">
-import { useToastStore } from '@/stores/toast'
+import type { Toast } from '@/stores/toast'
 
-const store = useToastStore()
+defineProps<{
+  toasts: Toast[]
+}>()
 </script>

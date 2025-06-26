@@ -32,7 +32,6 @@ export const useUserStore = defineStore('users', () => {
   }
 
   const paginateList = (page: number) => {
-    console.log(appliedFilter.value)
     loadListData(page, appliedFilter.value)
   }
 
@@ -44,7 +43,6 @@ export const useUserStore = defineStore('users', () => {
   const reloadList = () => {
     // se for o último registro da lista e a pagina for maior que 1, automaticamente busca a página anterior
     if (users.value.length === 1 && pagination.page > 1) {
-      console.log('here')
       pagination.page = pagination.page - 1
     }
     loadListData(pagination.page, appliedFilter.value)

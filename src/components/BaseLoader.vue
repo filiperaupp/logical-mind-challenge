@@ -4,7 +4,7 @@
       class="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
       :class="colorClass"
     ></div>
-    <span v-if="withText" class="text-gray-600">Carregando dados...</span>
+    <span v-if="withText" class="text-gray-600" data-test="loader-text">Carregando dados...</span>
   </div>
 </template>
 
